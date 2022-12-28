@@ -41,7 +41,6 @@ $ https://github.com/VAIV-SKKU/Frontend.git
 
 ```
 
-### How to Run
 
 
 ## 파일 구조
