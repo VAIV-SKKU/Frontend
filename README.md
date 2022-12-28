@@ -41,8 +41,13 @@ $ https://github.com/VAIV-SKKU/Frontend.git
 
 ```
 
+### How to Run
 
+```
 
+python demo.py
+
+```
 ## 파일 구조
 
 ```
