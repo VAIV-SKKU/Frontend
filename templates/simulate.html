@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <title>주식예측 프로그램</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" >
+        <link href="./static/main.css" rel="stylesheet" />
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="./static/tab.js"></script>
+        <script src="./static/login.js"></script>
+        <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, width=device-width">
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+        <!-- <script src="./static/node_lib/worker_threads.js"></script>
+        <script src="./static/node_lib/internal/worker.js"></script>
+        <script src="./static/node_lib/internal/worker/io.js"></script> -->
+        <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-stock.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-data-adapter.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-annotations.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-ui.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-exports.min.js"></script>
+
+        <link href="https://cdn.anychart.com/releases/8.11.0/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+        <link href="https://cdn.anychart.com/releases/8.11.0/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+
+        <!-- <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
+        <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+        <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+        <script src="https://code.highcharts.com/highcharts.js"></script> -->
+        <style type="text/css"></style>
+    </head>
+    <body>
+        <!-- <header>
+            <span class="title" style="text-align:left;width:40%;margin-right:50px;">
+                <a onClick="location.href='http://14.49.45.139:80/'"><b>개별 종목 예측 시뮬레이션</b></a>
+            </span>
+            <span class="v-line"></span>
+            <span class="title" style="text-align:left;width:40%;margin-right:50px;margin-left:50px;border: medium dashed yellow;">
+                <a onClick="location.href='http://14.49.45.139:80/discover'"><b>주가 차트 이미지 기반 상승 종목 예측 시뮬레이션</b></a>
+            </span>
+            <span class="v-line"></span>
+            <span class="title" style="text-align:right;width:40%;margin-left:50px;font-family:Roboto;">
+                <a onClick="location.href='http://14.49.45.139:80/yolo2'"><b>Yolo 기반 매수/매도 타이밍 인식 시뮬레이션</b></a>
+            </span>
+        </header> -->
+
+        <article>
+            <form id="add-form" method="POST" enctype = "multipart/form-data">
+                    <div class="v1_928"></div>      <!--인공지능 차트 예측 background-->
+                    <div class="v1_939">
+                        <div class="v1_940">
+                            <div class="v60_156_LogInOut logIn" onclick="showLogInTab()">
+                                <span id="loginButton" class="v60_157_LogInOut">로그인</span>
+                                <!-- <span><input type="date" id="tempInput" name="backTestDate" height="25"  value="2022-09-30" min="2006-01-01"></span> -->
+                            </div>
+                        </div>
+                        <ul class="tabs">
+                            <li class="tab-link current" data-tab="tab-1" onclick="removeAllChildNodes(document.getElementById('sidebar'))"><span class="v1_941">Today’s Discovery</span></li>
+		                    <li class="tab-link myAssetTabClass" data-tab="tab-2" onclick="makeYoloCard()" ><span class="v1_942">My Asset</span></li>
+		                    <li class="tab-link" data-tab="tab-3"><span class="v1_943" onclick="removeAllChildNodes(document.getElementById('sidebar'))">Back Testing</span></li>
+                        </ul>
+                    </div>
+
+                <div class="tabcontent">
+                    <div id="tab-1" class="tab-content current">
+                        <div class="left">
+                            <span class="v1_1024">상승 종목 예측</span>
+                            <div class="predictDateInput">
+                                <!-- <input type="date" id="currentDate" name="date" height="10" min="2006-01-01" value="2022-10-26"> -->
+                            </div>
+
+
+                            <!-- <div class="v60_1574"><img class="icons" src="static/images/check.png" alt="checked icon"></div></div>
+                            <div class="v60_1574_unchecked"></div> -->
+                            <div class="topNumberOfStocks">
+                                <div class="forSettingPosition">
+                                    모델별 최대&nbsp;&nbsp;<input class="topNumberInput" type="number" name="topNumber" min="1" max="968" value="20" style="text-align: center;font-family: Roboto;font-weight: Bold;font-size: 16px;">&nbsp;&nbsp;종목
+                                </div>
+                            </div>
+
+                            <div class="v1_1012">
+                                <div class="v1_1013">
+                                    <label>코스피</label>&nbsp;&nbsp;<input type="radio" name="stockMarket" value="KOSPI" checked>
+                                </div>
+                            </div>
+                            <div class="v1_1017">
+                                <div class="v1_1018">
+                                    <label>코스닥</label>&nbsp;&nbsp;<input type="radio" name="stockMarket" value="KOSDAQ">
+                                </div>
+                            </div>
+                            <div class="tableContent" id="discoverTableDiv">
+                                <!-- <table class="discoverTable table-fill">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center sticky-head-one thBold" rowspan="2">종목명</th>
+                                            <th class="text-center sticky-head-one thBold" rowspan="2">종가</th>
+                                            <th class="text-center sticky-head-one" colspan="2">예측모델 5-Day 상승 확률</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center sticky-head-two thBold">VGG16</th>
+                                            <th class="text-center sticky-head-two thBold">EfficientNet</th>
+                                        </tr>
+                                    </thead>
+                                        <tbody class="table-hover">
+
+                                        </tbody>
+                                </table> -->
+                            </div>
+                        </div>
+
+                        <div class="right">
+                            <div class="rightTitle">
+                                <!-- <span class="v1_1023" id="rightStockName">삼성전자</span>
+                                <span class="v1_953" id="rightDate">2022년 10월 27일 오후 3:30</span>
+                                <span class="v1_954" id="rightClosePrice">56,300원 </span>
+                                <span class="v1_955" id="rightProfit">(-1.7%)</span> -->
+
+                                <span class="v1_1023" id="rightStockName"></span>
+                                <span class="v1_953" id="rightDate"></span>
+                                <span class="v1_954" id="rightClosePrice"></span>
+                                <span class="v1_955" id="rightProfit"></span>
+                            </div>
+
+                            <div class="rightChart" id="container"></div>
+
+                            <!-- PLUS MINUS BUTTON -->
+                            <div class="v60_1612 plusMinusBox">     <!-- 숫자 배경 -->
+                                <span class="v60_159" id="numOfBuy">0</span>
+                            </div>
+                                <div class="v60_56"></div>  <!-- minus 버튼 배경 -->
+                                <div class="v60_57"></div>  <!-- plus 버튼 배경 -->
+                                <div class="v60_170 plus_class" id="buy_plusDiv">
+                                    <div class="v60_171"><svg xmlns="http://www.w3.org/2000/svg" color="rgba(163,163,163,1)" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ai ai-Plus"><path d="M12 20v-8m0 0V4m0 8h8m-8 0H4"/></svg></div>
+                                </div>
+                                <div class="v60_172 minus_class" id="buy_minusDiv">
+                                    <div class="v60_173"></div>
+                                </div>
+
+                            <!-- 매수 버튼 -->
+                            <div class="v60_156 buy_class">
+                                <span class="v60_157">매수</span>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <!-- Tab2. My Asset -->
+                    <div id="tab-2" class="tab-content">
+                        <!-- <span class="v1_1024">My Asset</span> -->
+
+                        <!--  -->
+                        <div class="totalAssetDiv">
+                            <div class="assetTotalProfitDiv">
+                                <div style="flex:1; position:relative; top:15px; left:15px; width: 100px;height:30px; font-weight: Bold;">총 손익</div>
+                                <div id="assetTotalGain" style="flex:1; margin: 0px 5%; position:relative; top: 15px; text-align:right; height: 30px; font-weight: 500;">+0원</div>
+                                <div id="assetTotalProfit" style="flex:1; position:relative; top: 15px; text-align:right; height:30px; font-weight: 500;">+0.00%</div>
+                                <div style="flex:1; margin: 0px 5%; position:relative; top: 15px; text-align:right; height:30px; font-weight: 500;"></div>
+                            </div>
+                            <div class="assetTotalBuyDiv">
+                                <div style="flex:1; position:relative; top:15px; left:15px; width: 100px;height:30px; font-weight: 400;">총 매입</div>
+                                <div id="assetTotalBuy" style="flex:1; margin: 0px 5%; position:relative; top: 15px; text-align:right; height: 30px; font-weight: 400;">+0원</div>
+                                <div style="flex:1; position:relative; top: 15px; text-align:right; height:30px; font-weight: 400;">총 평가</div>
+                                <div id="assetTotalCurrent" style="flex:1; margin: 0px 5%; position:relative; top: 15px; text-align:right; height:30px; font-weight: 400;">0원</div>
+                            </div>
+                            <div class="assetRealGainDiv">
+                                <div style="flex:1; position:relative; top:15px; left:15px; width: 100px;height:30px; font-weight: 400;">실현 손익</div>
+                                <div id="assetRealGain" style="flex:1; margin: 0px 5%; position:relative; top: 15px; text-align:right; height: 30px; font-weight: 400;">0원</div>
+                                <div style="flex:1; position:relative; top: 15px; text-align:right; height:30px; font-weight: 400;"></div>
+                                <div style="flex:1; margin: 0px 5%; position:relative; top: 15px; text-align:right; height:30px; font-weight: 400;"></div>
+                            </div>
+                        </div>
+
+                        <div class="refresh_icon">
+                            <img src="static/images/icon_refresh.png" alr="refresh">
+                        </div>
+                        <!-- My Asset Table -->
+                        <div class="tableContent_asset" id="assetTableDiv"> <!--나중에 위치 조정하기-->
+                            <table class="table-fill-asset" id="assetTable_id">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center sticky-head-one thBold exceptModels_th">종목명</th>
+                                        <th class="text-center sticky-head-one thBold exceptModels_th">평가손익<br>수익률</th>
+                                        <th class="text-center sticky-head-one thBold exceptModels_th">보유수량</th>
+                                        <th class="text-center sticky-head-one thBold exceptModels_th">매입가<br>현재가</th>
+                                        <th class="text-center sticky-head-one thBold exceptModels_th">매입금액<br>평가금액</th>
+                                        <th class="text-center sticky-head-one thBold exceptModels_th">+1Day</th>
+                                        <th class="text-center sticky-head-one thBold exceptModels_th">+2Day</th>
+                                        <th class="text-center sticky-head-one thBold exceptModels_th">+3Day</th>
+                                        <th class="text-center sticky-head-one thBold exceptModels_th">+4Day</th>
+                                        <th class="text-center sticky-head-one thBold exceptModels_th">+5Day</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table-hover" id="assetTableBody">
+
+                                </tbody>
+                            </table>
+
+                    <!-- This is YOLO Tab--->
+
+                            <section class="content">
+
+                                <span style="font-size:15pt; font-weight:bolder;">Stock Analysis</span>
+
+                            </section>
+
+                            <section>
+                            <div id="sidebar">
+
+
+                            </div>
+
+                            </section>
+                        </div>
+                    </div>
+
+
+
+
+                    <!-- Tab3. Back Testing -->
+                    <div id="tab-3" class="tab-content">
+                        <div class="back_left">
+                            <!-- <span class="v1_1024">매수 조건</span> -->
+                            <div class="v1_1024_backtest" id="progressbarDiv"><span id="loadingMessage"><br></span><progress class="progress" id="backtestProgress" value="0" min="0" max="100"></progress></div>
+                            <div class="v2_1"></div>
+                            <span class="v1_1024_2">매도 조건</span>
+                            <div class="v2_2"></div>
+
+                            <div class="v2_index_1"><sapn class="v2_index_1_text">운용 기간</sapn></div>
+                            <!-- <div class="v2_index_2"><sapn class="v2_index_2_text">매수 가격 기준</sapn></div> -->
+                            <div class="v2_index_2"><sapn class="v2_index_2_text">최대 보유종목 수</sapn></div>
+                            <div class="v2_index_3"><sapn class="v2_index_3_text">종목군</sapn></div>
+                            <div class="v2_index_4"><sapn class="v2_index_4_text">예측 모델</sapn></div>
+                            <div class="v2_index_6"><sapn class="v2_index_6_text">매도 가격 기준</sapn></div>
+
+                            <div class="v60_156_back backtest">
+                                <span class="v60_157_back">백테스트 실행</span>
+                            </div>
+
+                            <div class="v2_content oneRow v2_content_1">
+                                <span class="v2_content_text_twoRow">
+                                    <input class="backTestDate backTestInput" type="date" id="startDate" name="backTestDate" height="25" value="2022-01-01" min="2006-01-01" style="text-align: center;font-family: Roboto;font-weight: Bold;font-size: 16px;">
+                                    &nbsp;부터&nbsp;&nbsp;&nbsp;
+                                    <input class="backTestDate backTestInput" type="date" id="endDate" name="backTestDate" height="25"  value="2022-09-30" min="2006-01-01" style="text-align: center;font-family: Roboto;font-weight: Bold;font-size: 16px;">
+                                    &nbsp;까지&nbsp;&nbsp;&nbsp;
+                                </span>
+                            </div>
+                            <!-- <div class="v2_content oneRow v2_content_2">
+                                <span class="v2_content_text_oneRow">
+                                    전일종가&nbsp;&nbsp;&nbsp;
+                                    <input class="backTestInput" type="number" name="riseRate" min="4" max="4" value="4">
+                                    %
+                                </span>
+                            </div> -->
+                            <div class="v2_content oneRow v2_content_2">
+                                <span class="v2_content_text_oneRow">
+                                    <input class="backTestInput" type="number" name="numberOfStocks" min="0" max="968" value="20" style="text-align: center;font-family: Roboto;font-weight: Bold;font-size: 16px;">
+                                    종목
+                                </span>
+                            </div>
+                            <div class="v2_content oneRow v2_content_3">
+                                <span class="v2_content_text_oneRow">
+                                    <label>코스피   <input type="radio" name="backTestStockMarket" value="KOSPI" checked></label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label>코스닥  <input type="radio" name="backTestStockMarket" value="KOSDAQ"></label>
+                                </span>
+                            </div>
+                            <div class="v2_content oneRow v2_content_4">
+                                <span class="v2_content_text_oneRow">
+                                    <label>VGG16   <input type="checkbox" name="backTestModel" value="VGG16" style="width:20px;height:20px;position:relative;top:4px;" checked></label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label>EfficientNet  <input type="checkbox" name="backTestModel" value="EfficientNet" style="width:20px;height:20px;position:relative;top:4px;" checked></label>
+                                </span>
+                            </div>
+                            <div class="v2_content oneRow v2_content_6">
+                                <span class="v2_content_text_oneRow">
+                                    전일종가&nbsp;&nbsp;&nbsp;
+                                    <input class="backTestInput" type="number" name="declineRate" min="-20" max="4" value="0" style="text-align: center;font-family: Roboto;font-weight: Bold;font-size: 16px;">
+                                    %
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="back_right">
+                            <span class="v1_1023_2">백테스팅 수익률</span>
+                            <!-- 누적 수익률 수치 -->
+                            <div class="back_01">
+                                <div class="back_01_label">
+                                    누적 수익률
+                                </div>
+                                <div id="back_01Div">
+
+                                </div>
+                                <!-- <div class="back_01_profit">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;27%
+                                </div> -->
+                            </div>
+
+                            <!-- profit chart -->
+                            <div class="back_02">
+                                <div class="back_02_index">백테스팅 누적 수익률 차트</div>
+                                <div class="back_02_image" id="cumulative_chart">
+                                    <canvas id="cumulative_chart_canvas"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- rate of plus/minus stocks -->
+                            <div class="back_03">
+                                <div class="back_02_index">백테스팅 승률</div>
+                                <div class="back_03_image" id="winning_rate">
+                                    <canvas id="backtest_chart_canvas"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- <div class="v1_1041">
+                    <span class="v1_1042">인공지능 차트 예측</span>
+                    <span class="v1_1043">차트의 상승 하락 패턴을 학습하여 5일 후를 예측하다!</span>
+
+                    <div class="v1_1044">
+                        <img src="static/images/icons8-주식-64.png" alt="stock chart icon">
+                    </div>
+                </div> -->
+            </div>
+        </form>
+        <script>
+
+            //document.getElementById('currentDate').value = new Date().toISOString().substring(0, 10);;
+        </script>
+    </article>
+
+</body>
+</html>
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='loadingoverlay.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='progressbar.min.js') }}"></script>
+        <script>
+            function receiveMessage(event) {
+                if (event.origin !== "http://14.49.45.139/login") {
+                    localStorage.setItem('login', 0);
+                    localStorage.setItem('user_id', null);
+                    window.open("login","LogInTab","width=500, height=400, top=10, left=10");
+                }
+                console.log("login success");
+            }
+            window.addEventListener("message", receiveMessage, false);
+
+            $(document).ajaxStart(function(){
+                $.LoadingOverlay("show");
+            });
+            $(document).ajaxStop(function(){
+                $.LoadingOverlay("hide");
+            });
+
+            $("label input").on("click", function() {
+                $("#" + $(this).parents("label").attr("for")).click();
+             });
+
+            function showLogInTab() {
+                var popup = window.open("login","LogInTab","width=500, height=400, top=10, left=10");
+                popup.postMessage("hi i'm from /simulate", "http://14.49.45.139/login");
+
+            }
+
+        </script>
+        <script src="{{ url_for('static', filename='stock.js') }}" ></script>
+        <script type="text/javascript">
+
+        </script>
+    </body>

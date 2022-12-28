@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}" >
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="../static/login.js"></script>
+    <script type="text/javascript"></script>
+    <title>Log In</title>
+</head>
+<body>
+    <div class="main">
+        <h3 class="logo">인공지능 주가 차트 예측</h1>
+        <div class="container">
+            <input type="text" placeholder="E-mail" id="id" class="account">
+            <input type="password" placeholder="Password" id="password" class="account">
+            <br>
+            <button id="login" class="account">로그인</button>
+            <p id="alert" class="account"> </p>
+        </div>
+    </div>   
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <title>Predict</title>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-stock.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/v8/js/anychart-annotations.min.js"></script>
+        <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+        <link href="https://cdn.anychart.com/playground-css/annotated/annotated-title.css" type="text/css" rel="stylesheet">
+        <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+        <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" >
+    </head>
+    <body>
+        <header>
+            <span class="title" style="text-align:left;width:40%;margin-right:50px;">
+                <a onClick="location.href='http://14.49.45.139:80/'"><b>개별 종목 예측 시뮬레이션</b></a>
+            </span>
+            <span class="v-line"></span>
+            <span class="title" style="text-align:left;width:40%;margin-right:50px;margin-left:50px;">
+                <a onClick="location.href='http://14.49.45.139:80/simulate'"><b>주가 차트 이미지 기반 상승 종목 예측 시뮬레이션</b></a>
+            </span>
+            <span class="v-line"></span>
+            <span class="title" style="text-align:right;width:40%;margin-left:50px;border: medium dashed yellow;">
+                <a onClick="location.href='http://14.49.45.139:80/yolo2'"><b>Yolo 기반 매수/매도 타이밍 인식 시뮬레이션</b></a>
+            </span>
+        </header>
+        <article>
+            <form id="add-form" method="POST" enctype = "multipart/form-data">
+                <div class="right">
+                    <h2 style="text-align:center">&nbsp;Options</h2>
+                    <div class="OptionDate">
+                        <div class="optionType">
+                            <h5 style="font-size:20px">&nbsp;Start Date</h5>
+                            &nbsp;<input type="date" name="start" height="15" value="2022-07-21" min="1980-01-01">
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="OptionDate">
+                        <div class="optionType">
+                            <h5 style="font-size:20px">&nbsp;End Date</h5>
+                            &nbsp;<input type="date" name="end" height="15" value="2022-08-17" min="1980-01-01">
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="OptionDate">
+                        <div class="optionType">
+                            <h5 style="font-size:20px">&nbsp;Stock</h5>
+                            &nbsp;<input type="text" name="stock" height="15" value="엔씨소프트">
+                        </div>
+                    </div>
+                    <br>
+                    <div id="submit">
+                        <button type="submit" class="submit-btn">Simulate!</button>
+                    </div>
+                </div>
+            </form>
+            <form id="result-form" method="POST" enctype = "multipart/form-data">
+                <div class="left" id="result">
+                    <div id="info" style="text-align: center">
+                        <h2 id="Now"></h2>
+                        <div id="yolo" class="yolo">
+
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </article>
+        <script src="http://code.jquery.com/jquery-latest.js"></script> 
+        <script type="text/javascript" src="{{ url_for('static', filename='loadingoverlay.min.js') }}"></script>
+        <script>
+
+        </script>
+        <script src="{{ url_for('static', filename='yolo.js') }}" ></script>
+    </body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <title>Predict</title>
+<!--        <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />-->
+<!--        <script defer src="https://pyscript.net/alpha/pyscript.js"></script>-->
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" >
+<!--        <py-env>-->
+<!--            - matplotlib-->
+<!--            - numpy-->
+<!--            - pandas-->
+<!--            - requests-->
+<!--            - paths:-->
+<!--                - ./predict.py-->
+<!--                - /home/ubuntu/2022_VAIV_Dataset/Stock_Data/Kospi_Data/-->
+<!--        </py-env>-->
+    </head>
+    <body>
+        <header>
+            <span class="title" style="text-align:left;width:40%;margin-right:50px;border: medium dashed yellow;">
+                <a onClick="location.href='http://14.49.45.139:80/'"><b>개별 종목 예측 시뮬레이션</b></a>
+            </span>
+            <span class="v-line"></span>
+            <span class="title" style="text-align:left;width:40%;margin-right:50px;margin-left:50px;">
+                <a onClick="location.href='http://14.49.45.139:80/simulate'"><b>주가 차트 이미지 기반 상승 종목 예측 시뮬레이션</b></a>
+            </span>
+            <span class="v-line"></span>
+            <span class="title" style="text-align:right;width:40%;margin-left:50px;">
+                <a onClick="location.href='http://14.49.45.139:80/yolo2'"><b>Yolo 기반 매수/매도 타이밍 인식 시뮬레이션</b></a>
+            </span>
+        </header>
+        <article>
+            <form id="add-form" method="POST" enctype = "multipart/form-data">
+                <div class="left" id="result">
+<!--                    <div id="lineplot">-->
+<!--                        <py-script src="{{ url_for('static', filename='script.py') }}" output="lineplot"></py-script>-->
+<!--                    </div>-->
+<!--                    <img src="{{ url_for('static', filename='/images/test_gragh.png')}}">-->
+<!--                    <img id="image" style="width: 100%" height="50%">-->
+                </div>
+                <div class="right">
+                    <h2 style="text-align:center">&nbsp;Options</h2>
+                    <div class="OptionDate">
+                        <div class="optionType">
+                            <h5 style="font-size:20px">&nbsp;Date</h5>
+                            &nbsp;<input type="date" name="date" height="15" value="2019-04-16" min="1980-01-01">
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="OptionDate">
+                        <div class="optionType">
+                            <h5 style="font-size:20px">&nbsp;Stock</h5>
+                            &nbsp;<input type="text" name="stock" height="15" value="삼성전자">
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="OptionDate">
+                        <div class="optionType">
+                            <h3>&nbsp;Forecast Interval</h3>
+                            &nbsp; 1 day
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="OptionDate">
+                        <div class="optionType">
+                            <h3>&nbsp;Labeling</h3>
+                            &nbsp;&nbsp;4%_01_2 Labeling
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="OptionModels">
+                        <div class="optionType">
+                            <h3>&nbsp;Models</h3>
+                        </div>
+                        <div class="options">
+                            &nbsp;<input type="checkbox" name="models" value="VGG16" required checked> VGG16 <br>
+                            &nbsp;<input type="checkbox" name="models" value="EfficientNet" required checked> EfficientNet <br>
+
+                        </div>
+                    </div>
+                    <br>
+                    <button type="submit" class="submit-btn">Predict!</button>
+<!--                    <button id="button" >Predict!</button>-->
+                </div>
+            </form>
+        </article>
+        <script src="http://code.jquery.com/jquery-latest.js"></script> 
+        <script type="text/javascript" src="{{ url_for('static', filename='loadingoverlay.min.js') }}"></script>
+        <script>
+            $(document).ajaxStart(function(){
+                $.LoadingOverlay("show");
+            });
+            $(document).ajaxStop(function(){
+                $.LoadingOverlay("hide");
+            });
+        </script>
+        <script src="{{ url_for('static', filename='tragedy.js') }}" ></script>
+    </body>
+</html>
+

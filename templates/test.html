@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="utf-8">
+        <title>Make Dataset</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" >
+    </head>
+    <body>
+        <header>
+            <span class="title">
+                <a><b>Make Dataset</b></a>
+            </span>
+        </header>
+        <article>
+            <form name="add-form" action="http://14.49.45.139:80/make" method="POST" enctype = "multipart/form-data">
+                Input Files &nbsp;
+                <input type="text" name="output_dir" placeholder="Input Directory" size=40 required/>
+                <input type="file" name="file" webkitdirectory multiple required/> 
+                <br><br><br>
+                Output Directory &nbsp;
+                <input type="text" name="output_dir" placeholder="Output Directory" size=50 required/>
+                <br><br><br>
+                Train Date &nbsp;
+                <input type="date" class='left' name="train_start" value="2006-01-01" min="1980-01-01" max="2022-12-31"> ~
+                <input type="date" name="train_end" value="2022-01-01" min="1980-01-01" max="2022-12-31">
+                <br><br><br>
+                Validation Date &nbsp;
+                <input type="date" class='left' name="val_start" value="2006-01-01" min="1980-01-01" max="2022-12-31"> ~
+                <input type="date" name="val_end" value="2022-01-01" min="1980-01-01" max="2022-12-31">
+                <br><br><br>
+                Test Date &nbsp;
+                <input type="date" class='left' name="test_start" value="2006-01-01" min="1980-01-01" max="2022-12-31"> ~
+                <input type="date" name="test_end" value="2022-01-01" min="1980-01-01" max="2022-12-31">
+                <br><br><br>
+                Day Period &nbsp;
+                <input type="number" class='left' name="day_period" placeholder="ex) 20" size=5 required> 일
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                Forecast Interval &nbsp;
+                <input type="number" name="forecast_interval" placeholder="ex) 5" size=5 required> 일
+                <br><br><br>
+                Labeling
+                <br><br>
+                <select name="labeling" placeholder="Labeling 방식" id="labeling-select">
+                    <option value=1>5%_01 Labeling</option>
+                    <option value=2>5%_012 Labeling</option>
+                    <option value=3>High_Low_01 Labeling</option>
+                    <option value=4>0123 Labeling</option>
+                </select>
+                <br><br><br>
+                Sampling
+                <br><br>
+                <input type="number" name="sampling" placeholder="ex) 30000" step=10000> 개
+                <br><br><br>
+                Image Size (width x height)
+                <br><br>
+                <input type="number" name="width" placeholder="ex) 50" required> x
+                <input type="number" name="height" placeholder="ex) 50" required>
+                <br><br><br>
+                Volume
+                <br><br>
+                <input type="checkbox" name="volume">
+                <label for="volume"> 사용 </label>
+                <br><br><br>
+                Moving Average
+                <br><br>
+                <input type="checkbox" name="5MA">
+                <label for="5MA"> 5일 </label>
+                <input type="checkbox" name="20MA">
+                <label for="5MA"> 20일 </label>
+                <input type="checkbox" name="60MA">
+                <label for="5MA"> 60일 </label>
+                <input type="checkbox" name="120MA">
+                <label for="5MA"> 120일 </label>
+                <input type="checkbox" name="240MA">
+                <label for="5MA"> 240일 </label>
+                <br><br><br>
+                <button type="submit" class="submit-btn">Make in Local</button>
+                <button type="submit" class="submit-btn">Make in Server</button>
+            </form>
+        </article>
+    </body>
+    <script>
+        console.log('hello')
+        function test(e) {
+            e.value
+            console.log('hello');
+        }
+        function openDirectory(dirName) {
+            document.forms.getElementByName(dirName).addEventListener("change", function(event) {
+                console.log(document.forms['add-form'][dirName].value);
+                console.log('hello');
+                window.open(document.forms['add-form'][dirName].value);
+            }, false);
+        }
+
+        openDirectory("input_dir_upload", "input_dir")
+        openDirectory("output_dir_upload", "output_dir")
+    </script>
+</html>
