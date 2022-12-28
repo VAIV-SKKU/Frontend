@@ -83,6 +83,10 @@ $ https://github.com/VAIV-SKKU/Frontend.git
 - **[NavergetOHLC.js](https://github.com/skku-synapse/frontend/blob/main/src/components/Test.js)**
   - Creates the stock charts shown in the simulation using Naver Finance.
 
-- **[KRXgetOHLC.js](https://github.com/VAIV-SKKU/Frontend/blob/main/static/KRXgetOHLC.js))**
+- **[KRXgetOHLC.js](https://github.com/VAIV-SKKU/Frontend/blob/main/static/KRXgetOHLC.js)**
   - Creates the stock charts shown in the simulation using data.krx
+  
+- **[stock.js](https://github.com/VAIV-SKKU/Frontend/blob/main/static/stock.js)**
+  - The main JavaScript file for the simulator. Implements all of the dynamic actions that happen on the page.
+
 
