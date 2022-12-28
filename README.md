@@ -25,9 +25,6 @@ Calculates the profits of previous dates
 ![image](https://user-images.githubusercontent.com/68769481/209825890-6f2da53f-21ba-461f-a195-54368ae737f6.png)
 
 
-<br />
-
-## Prerequisite
 
 
 <br />
