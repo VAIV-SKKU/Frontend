@@ -6,17 +6,22 @@
 ## Simulator Image
 
 ### 1. Today's Discovery
+Recommends potential raising stocks for the day based on the probability outcomes of CNN/YOLO.
 ![image](https://user-images.githubusercontent.com/68769481/209825811-df515f0e-57eb-43f5-a73c-bafca8b75e95.png)
 
 
 <br />
+
 ### 2. My Asset
+Stores the stocks picked by the user.
+
 ![image](https://user-images.githubusercontent.com/68769481/209825905-a9ac34de-f23b-41d9-8a2b-04db658527d7.png)
 
 
 <br />
 
 ### 3. Backtesting
+Calculates the profits of previous dates
 ![image](https://user-images.githubusercontent.com/68769481/209825890-6f2da53f-21ba-461f-a195-54368ae737f6.png)
 
 
