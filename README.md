@@ -93,4 +93,5 @@ python demo.py
 - **[stock.js](https://github.com/VAIV-SKKU/Frontend/blob/main/static/stock.js)**
   - The main JavaScript file for the simulator. Implements all of the dynamic actions that happen on the page.
 
-
+- **[login.js](https://github.com/VAIV-SKKU/Frontend/blob/main/static/login.js)**
+  - The login page JavaScript file for the simulator. If you click the login button on the main page, a login pop-up page appears.
